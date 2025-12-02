@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { MONGODB_URI, MONGODB_DB } from '$env/static/private';
+import { MONGODB_URI, MONGODB_DB } from '$env/dynamic/private';
 
 const uri = MONGODB_URI || process.env.MONGODB_URI;
 const dbName = MONGODB_DB || process.env.MONGODB_DB || 'moodflow';
