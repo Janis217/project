@@ -1,13 +1,13 @@
 import { MongoClient } from 'mongodb';
-import { MONGODB_URI, MONGODB_DB } from '$env/dynamic/private';
+import { DB_URI } from '$env/dynamic/private';
 
-const uri = MONGODB_URI || process.env.MONGODB_URI;
-const dbName = MONGODB_DB || process.env.MONGODB_DB || 'moodflow';
+const uri = DB_URI;
+const dbName = 'moodflow'; // simpler and always works
 let client;
 let inMemory = [];
 
 if (!uri) {
-	console.warn('MONGODB_URI not set — using in-memory fallback. Data will not persist.');
+	console.warn('DB_URI not set — using in-memory fallback. Data will not persist.');
 }
 
 async function connectClient() {
@@ -38,7 +38,11 @@ export async function listMoods(limit = 100) {
 	if (!uri) return inMemory.slice(0, limit);
 	await connectClient();
 	const db = client.db(dbName);
-	const docs = await db.collection('moods').find({}).sort({ createdAt: -1 }).limit(limit).toArray();
+	const docs = await db.collection('moods')
+		.find({})
+		.sort({ createdAt: -1 })
+		.limit(limit)
+		.toArray();
 	return docs;
 }
 
