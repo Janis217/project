@@ -1,7 +1,6 @@
 import { MongoClient } from 'mongodb';
-import { MONGODB_URI } from '$env/dynamic/private';
 
-const uri = MONGODB_URI;
+const uri = process.env.MONGODB_URI;
 const dbName = 'moodflow';
 let client;
 let inMemory = [];
@@ -37,12 +36,11 @@ export async function listMoods(limit = 100) {
 	if (!uri) return inMemory.slice(0, limit);
 	await connectClient();
 	const db = client.db(dbName);
-	const docs = await db.collection('moods')
+	return db.collection('moods')
 		.find({})
 		.sort({ createdAt: -1 })
 		.limit(limit)
 		.toArray();
-	return docs;
 }
 
 export async function clearMoods() {
